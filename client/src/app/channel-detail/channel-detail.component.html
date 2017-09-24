@@ -1,6 +1,36 @@
 <div>
+  <!-- this works -->
   {{ channel$ | async | json }}
-  <br /> .{{ channel$?.name | async }}
-  <br /> .{{ channel$.id | async }}
-  <br /> .{{ channel$.loading | async }}
+
+  <!-- 
+          NONE of this works...argh!?         
+  -->
+  <br> Channel Name: {{ channel$?.name }}
+  <br> Channel Name: {{ channel$.name | async }}
+  <br> Channel ID: {{ channel$.id | async }}
+  <br> Channel Loading? {{ channel$.loading | async }}
+  <br> Channel Messages:
+  <ul>
+    <li *ngFor="let message of channel$?.messages | async">
+      message: {{ message.text }}
+    </li>
+  </ul>
+
+
+  <!-- 
+      If I subscribe to the apollo.watchQuery in the 
+      component and manually assign data to this.channel,
+      the code below works. But I can't get anything on
+      this page to work with my observable from watchQuery
+      (unless I use the json pipe as on line 3 above)
+  -->
+  <!--<br> Channel Name: {{ channel?.name }}
+  <br> Channel ID: {{ channel?.id }}
+  <br> Channel Loading? {{ channel?.loading }}
+  <br> Channel Messages:
+  <ul>
+    <li *ngFor="let message of channel?.messages">
+      message: {{ message.text }}
+    </li>
+  </ul>-->
 </div>
