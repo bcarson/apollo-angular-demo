@@ -1,0 +1,6 @@
+<div>
+  {{ channel$ | async | json }}
+  <br /> .{{ channel$?.name | async }}
+  <br /> .{{ channel$.id | async }}
+  <br /> .{{ channel$.loading | async }}
+</div>

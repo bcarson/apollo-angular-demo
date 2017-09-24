@@ -1,0 +1,1 @@
+{"schemaPath":"movies-schema.graphql","extensions":{"endpoints":{"dev":{"url":"10-0-1-31-34193.neo4jsandbox.com/graphql/","headers":{"Authorization":"Basic $(echo -n "angular:angular" | base64)"}}}}}
