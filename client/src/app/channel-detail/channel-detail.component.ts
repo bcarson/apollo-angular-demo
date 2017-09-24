@@ -4,35 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
-import gql from 'graphql-tag';
 
-interface Message {
-  id: number;
-  text: string;
-}
-
-interface Channel {
-  id: number;
-  name: string;
-  messages: Message[];
-}
-
-interface QueryResponse {
-  channel: Channel;
-}
-
-export const channelDetailQuery = gql`
-  query ChannelDetailQuery($channelId: ID!) {
-    channel(id: $channelId) {
-      id
-      name
-      messages {
-        id
-        text
-      }
-    }
-  }
-`;
+import { Channel, channelDetailQuery } from '../schema';
 
 @Component({
   selector: 'app-channel-detail',
@@ -63,29 +36,29 @@ export class ChannelDetailComponent implements OnInit {
 
   ngOnInit() {
     const id: number = this.route.snapshot.params['id'];
-    console.log('id from route.params: ', id); // <-- this is working
-    this.channel$ = this.apollo
-      .watchQuery<Channel>({
-        query: channelDetailQuery,
-        variables: { channelId: +id } // <-- I know this is working
-      })
-      .map(response => response.data['channel'])
-      .do(channel => console.log('channel', channel.name, channel.messages)); // <-- because this shows the data I want
+    // console.log('id from route.params: ', id); // <-- this is working
+    // this.channel$ = this.apollo
+    //   .watchQuery<Channel>({
+    //     query: channelDetailQuery,
+    //     variables: { channelId: +id } // <-- I know this is working
+    //   })
+    //   .map(response => response.data['channel'])
+    //   .do(channel => console.log('channel', channel.name, channel.messages)); // <-- because this shows the data I want
 
     /*
       * If I subscribe to the query and assign this.channel inside the subscription,
       * I can get my data to show up in the dom. 
       */
-    // this.apollo
-    //   .watchQuery<Channel>({
-    //     query: channelDetailQuery,
-    //     variables: { channelId: +id }
-    //   })
-    //   // .map(({ data }) => data['channel']) // <-- I can use map to select ['channel'] before I subscribe
-    //   .do(data => console.log('data', data)) // <-- this shows the data I want
-    //   .subscribe(({ data }) => {
-    //     console.log('one', data['channel']); // <-- or I can wait and select the channel from data here, this also works
-    //     this.channel = data['channel']; <-- but either way, I can't get my data to the dom w/o subscribing!!
-    //   });
+    this.apollo
+      .watchQuery<Channel>({
+        query: channelDetailQuery,
+        variables: { channelId: +id }
+      })
+      // .map(({ data }) => data['channel']) // <-- I can use map to select ['channel'] before I subscribe
+      .do(data => console.log('data', data)) // <-- this shows the data I want
+      .subscribe(({ data }) => {
+        console.log('one', data['channel']); // <-- or I can wait and select the channel from data here, this also works
+        this.channel = data['channel']; //<-- but either way, I can't get my data to the dom w/o subscribing!!
+      });
   }
 }

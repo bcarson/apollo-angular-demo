@@ -1,6 +1,6 @@
-<app-add-channel></app-add-channel>
 <div *ngFor="let channel of channels$ | async">
   <a [routerLink]="['/detail', channel.id]">
     {{ channel.id }}: {{ channel.name }}
   </a>
 </div>
+<app-add-channel></app-add-channel>

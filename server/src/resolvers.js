@@ -1,27 +1,28 @@
 const channels = [
   {
     id: 1,
-    name: 'soccer',
+    name: 'Soccer',
     messages: [
       {
         id: 2,
-        text: 'soccer is life'
+        text: 'Soccer is life!'
       }
     ]
   },
   {
     id: 2,
-    name: 'baseball',
+    name: 'Baseball',
     messages: [
       {
         id: 4,
-        text: 'baseball is life'
+        text: 'Baseball is life!'
       }
     ]
   }
 ];
 
 let nextId = 3;
+let nextMessageId = 3;
 
 export const resolvers = {
   Query: {
@@ -38,11 +39,14 @@ export const resolvers = {
       channels.push(newChannel);
       return newChannel;
     },
-    addMessage: (root, args) => {
-      const newMessage = { id: nextId++, text: args.text };
-      const channel = channels[args.channelID];
+    addMessage: (root, { message }) => {
+      const channel = channels.find(
+        channel => channel.id === message.channelId
+      );
+      if (!channel) throw new Error('Channel does not exist.');
+      const newMessage = { id: String(nextMessageId++), text: message.text };
       channel.push(newMessage);
-      return newChannel;
+      return newMessage;
     }
   }
 };

@@ -2,21 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 
-interface Channel {
-  id: number;
-  name: string;
-}
-
-export const channelsListQuery = gql`
-  query ChannelsListQuery {
-    channels {
-      id
-      name
-    }
-  }
-`;
+import { Channel, channelsListQuery } from '../schema';
 
 @Component({
   selector: 'app-channel-list',

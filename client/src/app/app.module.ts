@@ -13,6 +13,7 @@ import {
 } from './index';
 
 import { ROUTES } from './app.routes';
+import { AddMessageComponent } from './add-message/add-message.component';
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({
@@ -29,7 +30,8 @@ export function provideClient(): ApolloClient {
     AppComponent,
     AddChannelComponent,
     ChannelListComponent,
-    ChannelDetailComponent
+    ChannelDetailComponent,
+    AddMessageComponent
   ],
   imports: [
     ApolloModule.forRoot(provideClient),

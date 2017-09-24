@@ -1,30 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 
-import { channelsListQuery } from '../channel-list/channel-list.component';
-
-const addChannel = gql`
-  mutation addChannel($name: String!) {
-    addChannel(name: $name) {
-      id
-      name
-    }
-  }
-`;
+import { channelsListQuery, addChannel } from '../schema';
 
 @Component({
   selector: 'app-add-channel',
   templateUrl: './add-channel.component.html',
   styleUrls: ['./add-channel.component.css']
 })
-export class AddChannelComponent implements OnInit {
+export class AddChannelComponent {
   newChannel: string;
   constructor(private apollo: Apollo) {}
-
-  ngOnInit() {
-    console.log('hello from newChannel ', this.newChannel);
-  }
 
   addChannel() {
     this.apollo
