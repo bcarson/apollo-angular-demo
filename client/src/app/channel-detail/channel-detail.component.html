@@ -1,10 +1,11 @@
-<div><a [routerLink]="['/']">Home</a>
-  <h1>{{ channel?.name }}
+<a [routerLink]="['/']">Home</a>
+<div *ngIf="channel$ | async as channel">
+  <h1>{{ channel.name }}
   </h1>
   <ul>
-    <li *ngFor="let message of channel?.messages">
+    <li *ngFor="let message of channel.messages">
       {{ message.text }}
     </li>
   </ul>
-  <app-add-message [channelId]="channel?.id"></app-add-message>
+  <app-add-message [channelId]="channel.id"></app-add-message>
 </div>

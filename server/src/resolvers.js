@@ -41,11 +41,11 @@ export const resolvers = {
     },
     addMessage: (root, { message }) => {
       const channel = channels.find(
-        channel => channel.id === message.channelId
+        channel => channel.id === +message.channelId
       );
       if (!channel) throw new Error('Channel does not exist.');
       const newMessage = { id: String(nextMessageId++), text: message.text };
-      channel.push(newMessage);
+      channel.messages.push(newMessage);
       return newMessage;
     }
   }

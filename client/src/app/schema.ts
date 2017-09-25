@@ -35,6 +35,11 @@ export interface Message {
   text: string;
 }
 
+export interface MessageInput {
+  channelId: number;
+  text: String;
+}
+
 export interface Channel {
   id: number;
   name: string;
@@ -77,8 +82,8 @@ export const channelDetailQuery = gql`
 `;
 
 export const addMessage = gql`
-  mutation addMessage($name: String!) {
-    addMessage(message: $MessageInput) {
+  mutation addMessage($messageInput: MessageInput!) {
+    addMessage(message: $messageInput) {
       id
       text
     }

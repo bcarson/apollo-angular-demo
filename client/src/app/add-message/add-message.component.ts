@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 
-import { channelDetailQuery, addMessage, Message } from '../schema';
+import { channelDetailQuery, addMessage, MessageInput } from '../schema';
 
 @Component({
   selector: 'app-add-message',
@@ -10,21 +10,19 @@ import { channelDetailQuery, addMessage, Message } from '../schema';
 })
 export class AddMessageComponent {
   @Input() channelId: number;
-  constructor(private apollo: Apollo) {}
-  newMessage: Message;
-  addMessage() {
-    console.log('channelId inside message: ', this.channelId);
+  newMessage: string;
 
-    /*
-    *  calling addMessage throws this error:
-    *  Error: GraphQL error: Variable "$MessageInput" is not defined by operation "addMessage".
-    *  GraphQL error: Variable "$name" is never used in operation "addMessage".
-    */
+  constructor(private apollo: Apollo) {}
+
+  addMessage() {
     this.apollo
       .mutate({
         mutation: addMessage,
         variables: {
-          text: this.newMessage
+          messageInput: {
+            channelId: this.channelId,
+            text: this.newMessage
+          }
         },
         update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
@@ -34,7 +32,7 @@ export class AddMessageComponent {
             }
           });
 
-          data['channels'].messages.push(addMessage);
+          data['channel'].messages.push(addMessage);
           store.writeQuery({ query: channelDetailQuery, data });
         }
       })
