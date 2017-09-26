@@ -24,7 +24,14 @@ export class AddChannelComponent {
         //   {
         //     query: channelsListQuery
         //   }
-        // ]
+        // ],
+        optimisticResponse: {
+          addChannel: {
+            name: this.newChannel,
+            id: Math.round(Math.random() * -1000000),
+            __typename: 'Channel'
+          }
+        },
         update: (store, { data: { addChannel } }) => {
           const data = store.readQuery({ query: channelsListQuery });
           data['channels'].push(addChannel);

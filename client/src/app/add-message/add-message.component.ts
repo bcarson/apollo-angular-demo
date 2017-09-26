@@ -24,6 +24,13 @@ export class AddMessageComponent {
             text: this.newMessage
           }
         },
+        optimisticResponse: {
+          addMessage: {
+            text: this.newMessage,
+            id: Math.round(Math.random() * -1000000),
+            __typename: 'Message'
+          }
+        },
         update: (store, { data: { addMessage } }) => {
           const data = store.readQuery({
             query: channelDetailQuery,
@@ -38,7 +45,7 @@ export class AddMessageComponent {
       })
       .subscribe(
         ({ data }) => {
-          console.log('got data:', data);
+          console.log('Message added:', data['addMessage'].text);
           this.newMessage = null;
         },
         error => console.log('oops!', error)
