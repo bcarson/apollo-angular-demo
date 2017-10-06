@@ -29,6 +29,11 @@ type Mutation {
   addChannel(name: String!): Channel
   addMessage(message: MessageInput!): Message
 }
+
+# This Subscription will notify clients when changes are made to the data
+type Subscription {
+  messageAdded(channelId: ID!): Message
+}
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

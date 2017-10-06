@@ -1,3 +1,6 @@
+import { PubSub, withFilter } from 'graphql-subscriptions';
+const pubsub = new PubSub();
+
 const channels = [
   {
     id: 1,
@@ -22,7 +25,7 @@ const channels = [
 ];
 
 let nextId = 3;
-let nextMessageId = 3;
+let nextMessageId = 2;
 
 export const resolvers = {
   Query: {
@@ -35,7 +38,12 @@ export const resolvers = {
   },
   Mutation: {
     addChannel: (root, args) => {
-      const newChannel = { id: nextId++, name: args.name };
+      const welcome = 'Hello! Welcome to the ' + args.name + ' channel.';
+      const newChannel = {
+        id: nextId++,
+        name: args.name,
+        messages: [{ id: 1, text: welcome }]
+      };
       channels.push(newChannel);
       return newChannel;
     },
@@ -46,7 +54,21 @@ export const resolvers = {
       if (!channel) throw new Error('Channel does not exist.');
       const newMessage = { id: String(nextMessageId++), text: message.text };
       channel.messages.push(newMessage);
+      pubsub.publish('messageAdded', {
+        messageAdded: newMessage,
+        channelId: message.channelId
+      });
       return newMessage;
+    }
+  },
+  Subscription: {
+    messageAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('messageAdded'),
+        (payload, variables) => {
+          return payload.channelId === variables.channelId;
+        }
+      )
     }
   }
 };

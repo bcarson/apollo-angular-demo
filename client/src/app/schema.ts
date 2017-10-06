@@ -50,15 +50,6 @@ export interface QueryResponse {
   channel: Channel;
 }
 
-/*
-query ChannelsListQuery {
-  channels {
-    id
-    name
-  }
-}
-*/
-
 export const channelsListQuery = gql`
   query ChannelsListQuery {
     channels {
