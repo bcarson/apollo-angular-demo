@@ -41,14 +41,14 @@ server.use(
 );
 
 // eslint-disable-next-line no-unused-vars
-new SubscriptionServer(
-  {
-    schema: schema,
-    execute,
-    subscribe
-  },
-  {
-    server: graphQLServer,
-    path: subPath
-  }
-);
+// new SubscriptionServer(
+//   {
+//     schema: schema,
+//     execute,
+//     subscribe
+//   },
+//   {
+//     server: graphQLServer,
+//     path: subPath
+//   }
+// );

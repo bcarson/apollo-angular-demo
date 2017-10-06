@@ -20,6 +20,7 @@
     "nodemon": "^1.11.0"
   },
   "dependencies": {
+    "add-graphql-subscriptions": "^1.0.1",
     "body-parser": "^1.18.1",
     "cors": "^2.8.4",
     "express": "^4.15.2",
