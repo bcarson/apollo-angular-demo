@@ -5,7 +5,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 
-import { Channel, channelDetailQuery } from '../schema';
+import { Channel, messagesSubscription } from '../schema';
 
 @Component({
   selector: 'app-channel-detail',
@@ -20,8 +20,8 @@ export class ChannelDetailComponent implements OnInit {
   ngOnInit() {
     const id: number = this.route.snapshot.params['id'];
     this.channel$ = this.apollo
-      .watchQuery<Channel>({
-        query: channelDetailQuery,
+      .subscribe({
+        query: messagesSubscription,
         variables: { channelId: +id }
       })
       .map(response => response.data['channel']);

@@ -1,8 +1,9 @@
 import express from 'express';
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+import { execute, subscribe } from 'graphql';
 import bodyParser from 'body-parser';
 import { createServer } from 'http';
-import { SubscriptionServer } from 'add-graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import cors from 'cors';
 import { schema } from './src/schema';
 
@@ -41,14 +42,14 @@ server.use(
 );
 
 // eslint-disable-next-line no-unused-vars
-// new SubscriptionServer(
-//   {
-//     schema: schema,
-//     execute,
-//     subscribe
-//   },
-//   {
-//     server: graphQLServer,
-//     path: subPath
-//   }
-// );
+new SubscriptionServer(
+  {
+    schema: schema,
+    execute,
+    subscribe
+  },
+  {
+    server: ws,
+    path: subPath
+  }
+);

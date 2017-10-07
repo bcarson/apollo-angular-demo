@@ -50,6 +50,15 @@ export interface QueryResponse {
   channel: Channel;
 }
 
+export const messagesSubscription = gql`
+  subscription messageAdded($channelId: ID!) {
+    messageAdded(channelId: $channelId) {
+      id
+      text
+    }
+  }
+`;
+
 export const channelsListQuery = gql`
   query ChannelsListQuery {
     channels {
