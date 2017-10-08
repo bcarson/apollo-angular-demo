@@ -7,7 +7,7 @@ const channels = [
     name: 'Soccer',
     messages: [
       {
-        id: 2,
+        id: 1,
         text: 'Soccer is life!'
       }
     ]
@@ -17,7 +17,7 @@ const channels = [
     name: 'Baseball',
     messages: [
       {
-        id: 4,
+        id: 1,
         text: 'Baseball is life!'
       }
     ]

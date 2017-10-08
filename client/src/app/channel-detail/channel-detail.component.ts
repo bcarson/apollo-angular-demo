@@ -42,11 +42,11 @@ export class ChannelDetailComponent implements OnInit {
         console.log('subscription fired!', data);
         this.channel$.updateQuery(prev => {
           console.log('prev', prev);
-          const messages = prev.channel.messages || [];
-          console.log('message', messages);
+          const allMessages = prev.channel.messages || [];
+          console.log('message', allMessages);
           return {
             ...prev,
-            messages: [...messages, prev.channel.messages]
+            messages: [...allMessages, data.messageAdded]
           };
         });
       });
