@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, PreloadingStrategy } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Apollo, ApolloQueryObservable } from 'apollo-angular';
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import { Apollo, ApolloQueryObservable } from 'apollo-angular';
 
-import { Channel, messagesSubscription } from '../schema';
+import { Channel, channelDetailQuery, messagesSubscription } from '../schema';
 
 @Component({
   selector: 'app-channel-detail',
@@ -13,17 +14,41 @@ import { Channel, messagesSubscription } from '../schema';
   styleUrls: ['./channel-detail.component.css']
 })
 export class ChannelDetailComponent implements OnInit {
-  channel$: Observable<Channel>;
+  channel$: ApolloQueryObservable<Channel>;
   channel: Channel;
-  constructor(private apollo: Apollo, private route: ActivatedRoute) {}
+  constructor(
+    private apollo: Apollo,
+    private appRef: ApplicationRef,
+    private route: ActivatedRoute,
+    private zone: NgZone
+  ) {}
 
   ngOnInit() {
     const id: number = this.route.snapshot.params['id'];
     this.channel$ = this.apollo
+      .watchQuery<Channel>({
+        query: channelDetailQuery,
+        variables: { channelId: +id }
+      })
+      .map(response => response.data['channel']) as any;
+
+    this.apollo
       .subscribe({
         query: messagesSubscription,
         variables: { channelId: +id }
       })
-      .map(response => response.data['channel']);
+      .delay(0)
+      .subscribe(data => {
+        console.log('subscription fired!', data);
+        this.channel$.updateQuery(prev => {
+          console.log('prev', prev);
+          const messages = prev.channel.messages || [];
+          console.log('message', messages);
+          return {
+            ...prev,
+            messages: [...messages, prev.channel.messages]
+          };
+        });
+      });
   }
 }
