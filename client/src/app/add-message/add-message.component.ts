@@ -27,7 +27,7 @@ export class AddMessageComponent {
         optimisticResponse: {
           addMessage: {
             text: this.newMessage,
-            id: Math.round(Math.random() * -10000),
+            id: Math.round(Math.random() * -100),
             __typename: 'Message'
           }
         },
@@ -42,8 +42,8 @@ export class AddMessageComponent {
         }
       })
       .subscribe(
-        ({ data }) => {
-          console.log('Message added:', data['addMessage'].text);
+        () => {
+          // Clear out the text input field
           this.newMessage = null;
         },
         error => console.log('oops!', error)

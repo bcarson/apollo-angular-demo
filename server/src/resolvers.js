@@ -54,6 +54,7 @@ export const resolvers = {
       if (!channel) throw new Error('Channel does not exist.');
       const newMessage = { id: String(nextMessageId++), text: message.text };
       channel.messages.push(newMessage);
+      /* Activate the 'messageAdded' subscription */
       pubsub.publish('messageAdded', {
         messageAdded: newMessage,
         channelId: message.channelId

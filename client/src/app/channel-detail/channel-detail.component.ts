@@ -1,14 +1,8 @@
-import { ApolloQueryResult } from 'apollo-client/core/types';
-import { ApplicationRef, Component, NgZone, OnInit } from '@angular/core';
-import { ActivatedRoute, PreloadingStrategy } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Apollo, ApolloQueryObservable } from 'apollo-angular';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/withLatestFrom';
 
 import { Channel, channelDetailQuery, messagesSubscription } from '../schema';
 
@@ -19,19 +13,14 @@ import { Channel, channelDetailQuery, messagesSubscription } from '../schema';
 })
 export class ChannelDetailComponent implements OnInit {
   channel$: ApolloQueryObservable<Channel>;
-  channel: Channel;
-  constructor(
-    private apollo: Apollo,
-    private appRef: ApplicationRef,
-    private route: ActivatedRoute,
-    private zone: NgZone
-  ) {}
+  constructor(private apollo: Apollo, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    const id: number = this.route.snapshot.params['id']; // get the channel id from route params
+    // get the channel id from route params
+    const id: number = this.route.snapshot.params['id'];
 
     /*
-    * Pull the ChannelDetailQuery via GraphQL
+    * Pull the initial ChannelDetailQuery from GraphQL
     * returns:
     *   interface Channel {
     *   id: number;
@@ -44,25 +33,28 @@ export class ChannelDetailComponent implements OnInit {
         query: channelDetailQuery,
         variables: { channelId: +id }
       })
-      .map(response => response.data['channel']) as any; // map needs 'as any' on ApolloQueryObservable
+      .map(response => response.data['channel']) as any; // map needs 'as any' to work on ApolloQueryObservable
 
     /*
-      * Listen for updated from the GraphQL server
+      * Listen for updates from the GraphQL server
       */
     this.apollo
       .subscribe({
+        /* ^^^^^ this Subscribe is from Apollo */
         query: messagesSubscription,
         variables: { channelId: +id }
       })
-      .subscribe(data => {
-        console.log('subscription fired!', data);
-        // let's update our existing channel$ query
-        this.channel$.updateQuery(prev => {
+      .subscribe(latest => {
+        /* ^^^^^ this Subscribe is from RxJS */
+        /*
+        * Update the ChannelDetailQuery
+        */
+        this.channel$.updateQuery(old => {
           return {
-            ...prev,
+            ...old,
             channel: {
-              ...prev.channel,
-              messages: [...prev.channel.messages, data.messageAdded]
+              ...old.channel,
+              messages: [...old.channel.messages, latest.messageAdded]
             }
           };
         });
