@@ -27,7 +27,7 @@ export class AddMessageComponent {
         optimisticResponse: {
           addMessage: {
             text: this.newMessage,
-            id: Math.round(Math.random() * -1000000),
+            id: Math.round(Math.random() * -10000),
             __typename: 'Message'
           }
         },
@@ -38,8 +38,6 @@ export class AddMessageComponent {
               channelId: +this.channelId
             }
           });
-
-          data['channel'].messages.push(addMessage);
           store.writeQuery({ query: channelDetailQuery, data });
         }
       })
